@@ -31,6 +31,7 @@ include_recipe 'build-essential::default'
 # ensure log directory is present
 unless node['frontend-standard-stack']['project']['log_dir'].nil?
     directory node['frontend-standard-stack']['project']['log_dir'] do
-        :create
+        recursive true
+        action :create
     end
 end

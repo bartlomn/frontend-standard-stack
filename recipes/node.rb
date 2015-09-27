@@ -20,11 +20,18 @@
 #
 
 # install nvm
-include_recipe 'nvm::default'
+bash 'install_nvm' do
+    code <<-EOF
+        wget -qO- https://raw.githubusercontent.com/xtuple/nvm/master/install.sh | sudo bash
+    EOF
+    not_if "which nvm"
+end
 
-# install node.js
-nvm_install "v#{ node['frontend-standard-stack']['node']['version'] }"  do
-    from_source false
-    alias_as_default true
-    action :create
+# download and activate node
+bash "install_node_v#{ node['frontend-standard-stack']['node']['version'] }" do
+    code <<-EOF
+        nvm install v#{ node['frontend-standard-stack']['node']['version'] }
+        nvm use v#{ node['frontend-standard-stack']['node']['version'] }
+    EOF
+    not_if "which node"
 end
