@@ -27,3 +27,10 @@ include_recipe 'git::default'
 
 # install build-essential
 include_recipe 'build-essential::default'
+
+# ensure log directory is present
+unless node['frontend-standard-stack']['project']['log_dir'].nil?
+    directory node['frontend-standard-stack']['project']['log_dir'] do
+        :create
+    end
+end
