@@ -16,15 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Install / configure node.js through NVM
+# Execute 'npm install' on the project dir
 #
 
-# install nvm
-include_recipe 'nvm::default'
-
-# install node.js
-nvm_install "v#{ node['frontend-standard-stack']['node']['version'] }"  do
-    from_source false
-    alias_as_default true
-    action :create
+# Install node dependencies if project directory is provided
+# and package.json is present
+if File.file?( "#{ node['frontend-standard-stack']['project']['dir'] }/package.json" )
+	bash 'install_node_modules' do
+	    cwd node['frontend-standard-stack']['project']['dir']
+	    code <<-EOH
+            npm install -d > #{ node['frontend-standard-stack']['project']['log_dir'] }/npm_install.log 2>&1
+	    EOH
+    end
 end

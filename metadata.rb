@@ -24,7 +24,7 @@ maintainer_email 'bnowak@bnowak.com'
 license          'Apache 2.0'
 description      'Installs/Configures frontend-standard-stack'
 long_description 'Installs/Configures frontend-standard-stack'
-version          '0.1.0'
+version          '0.1.1'
 
 
 supports 'ubuntu'
