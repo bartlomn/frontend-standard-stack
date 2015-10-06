@@ -38,7 +38,7 @@ bash 'install_http_server_lib' do
     code <<-EOH
         sudo npm install -g http-server -d > #{ node['frontend-standard-stack']['project']['log_dir'] }/npm_install.log 2>&1
     EOH
-    notifies :create, 'magic_shell_alias[http-server]', :immediately
+    notifies :execute, 'magic_shell_alias[http-server]', :immediately
     not_if "which http-server"
 end
 
