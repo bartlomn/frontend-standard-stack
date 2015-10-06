@@ -27,10 +27,18 @@ unless node['frontend-standard-stack']['mocks-server']['serve_dir'].nil?
     end
 end
 
+# make command alias
+magic_shell_alias 'http-server' do
+    command "/usr/local/nvm/v#{ node['frontend-standard-stack']['node']['version'] }/lib/node_modules/http-server/bin/http-server"
+    action :nothing
+end
+
 # install server library
 bash 'install_http_server_lib' do
     code <<-EOH
-        npm install -g http-server -d > #{ node['frontend-standard-stack']['project']['log_dir'] }/npm_install.log 2>&1
+        sudo npm install -g http-server -d > #{ node['frontend-standard-stack']['project']['log_dir'] }/npm_install.log 2>&1
     EOH
+    notifies :create, 'magic_shell_alias[http-server]', :immediately
     not_if "which http-server"
 end
+
