@@ -1,4 +1,6 @@
+#
 # Cookbook Name:: frontend-standard-stack
+# Recipe:: esentials
 #
 # Copyright (C) 2015 Bart Nowak
 #
@@ -14,19 +16,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Configure stack for frontend projects
+# Install / configure simple node based mocks server
 #
 
-name             'frontend-standard-stack'
-maintainer       'Bart Nowak'
-maintainer_email 'bnowak@bnowak.com'
-license          'Apache 2.0'
-description      'Installs/Configures frontend-standard-stack'
-long_description 'Installs/Configures frontend-standard-stack'
-version          '0.1.5'
+# ensure server directory is present
+unless node['frontend-standard-stack']['mocks-server']['serve_dir'].nil?
+    directory node['frontend-standard-stack']['mocks-server']['serve_dir'] do
+        recursive true
+        action :create
+    end
+end
 
-supports 'ubuntu'
-
-depends 'apt', '~> 2.6.1'
-depends 'git', '~> 4.3.3'
-depends 'build-essential', '~> 2.2.3'
+# install server library
+bash 'install_http_server_lib' do
+    code <<-EOH
+        npm install -g http-server -d > #{ node['frontend-standard-stack']['project']['log_dir'] }/npm_install.log 2>&1
+    EOH
+    not_if "which http-server"
+end
